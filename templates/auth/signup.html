@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="col-12 col-sm-10 col-md-6 col-lg-5">
+        <div class="card shadow-lg p-4">
+            <h2 class="text-center mb-4">Create Account</h2>
+
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <!-- Email -->
+                <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="Email address" required>
+                    <label for="email">Email address</label>
+                </div>
+
+                <!-- Contact -->
+                <div class="form-floating mb-3">
+                    <input type="text" name="contact" class="form-control" id="contact" placeholder="Contact" required>
+                    <label for="contact">Contact</label>
+                </div>
+
+                <!-- Password1 -->
+                <div class="form-floating mb-3 position-relative">
+                    <input type="password" name="password1" class="form-control password-field" id="password1" placeholder="Password" required>
+                    <label for="password1">Password</label>
+                    <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" style="cursor:pointer;">
+                        <i class="bi bi-eye-fill"></i>
+                    </span>
+                </div>
+
+                <!-- Password2 -->
+                <div class="form-floating mb-3 position-relative">
+                    <input type="password" name="password2" class="form-control password-field" id="password2" placeholder="Confirm Password" required>
+                    <label for="password2">Confirm Password</label>
+                    <span class="position-absolute top-50 end-0 translate-middle-y me-3 toggle-password" style="cursor:pointer;">
+                        <i class="bi bi-eye-fill"></i>
+                    </span>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="mb-3 form-check">
+                    <input type="checkbox" class="form-check-input" id="terms" required>
+                    <label class="form-check-label" for="terms">
+                        I agree to the <a href="{% url 'terms' %}">Terms and Conditions</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 py-2">Sign Up</button>
+            </form>
+
+            <hr class="my-3">
+
+            <div class="text-center">
+                <p>Or continue with email</p>
+                <a href="#" class="btn btn-outline-primary w-100 py-2">Continue with Email</a>
+            </div>
+
+            <p class="mt-3 text-center">
+                Already have an account? <a href="{% url 'login' %}">Login</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+// Show/hide password for both password fields
+document.querySelectorAll(".toggle-password").forEach(btn => {
+    btn.addEventListener("click", function() {
+        const input = this.closest(".position-relative").querySelector(".password-field");
+        const icon = this.querySelector("i");
+        if(input.type === "password"){
+            input.type = "text";
+            icon.classList.replace("bi-eye-fill", "bi-eye-slash-fill");
+        } else {
+            input.type = "password";
+            icon.classList.replace("bi-eye-slash-fill", "bi-eye-fill");
+        }
+    });
+});
+</script>
+{% endblock %}
