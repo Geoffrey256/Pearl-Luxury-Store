@@ -1,3 +1,4 @@
+from .forms import ProfileUpdateForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, get_user_model, authenticate, logout
 from django.contrib import messages
@@ -68,16 +69,40 @@ def logout_view(request):
     return redirect("login")  # Redirect to login page after logout
 
 
+# pearlApp/views.py
+
+
 @login_required
 def profile_view(request):
+    user = request.user
     if request.method == "POST":
-        form = UserChangeForm(request.POST, instance=request.user)
+        form = ProfileUpdateForm(request.POST, instance=user)
         if form.is_valid():
-            form.save()
-            return redirect("/profile/")
+            contact = form.cleaned_data.get("contact")
+            password = form.cleaned_data.get("password1")
+
+            user.contact = contact
+            if password:
+                user.set_password(password)  # Always hash passwords
+            user.save()
+
+            messages.success(request, "Profile updated successfully!")
+            return redirect("profile")  # stay on profile page
     else:
-        form = UserChangeForm(instance=request.user)
-    return render(request, "profile.html", {"form": form})
+        form = ProfileUpdateForm(instance=user)
+
+    return render(request, "auth/profile.html", {"form": form})
+
+# @login_required
+# def profile_view(request):
+#     if request.method == "POST":
+#         form = UserChangeForm(request.POST, instance=request.user)
+#         if form.is_valid():
+#             form.save()
+#             return redirect("/profile/")
+#     else:
+#         form = UserChangeForm(instance=request.user)
+#     return render(request, "profile.html", {"form": form})
 
 
 def orders_view(request):
