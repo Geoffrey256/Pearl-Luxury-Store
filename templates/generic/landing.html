@@ -1,18 +1,7 @@
 {% extends "main.html" %}
-{% block title %}Home - Pearl Luxury Store{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
-{% load static %}
-
-<!-- Hero Section -->
-<div class="container mt-4">
-    <div class="p-5 text-center bg-light rounded-3 shadow-sm">
-        <h1 class="display-5 fw-bold">Welcome to Pearl Luxury Store</h1>
-        <p class="lead">Explore premium products for your home, pets, and lifestyle.</p>
-        <a class="btn btn-success btn-lg" href="#categories">Shop Now</a>
-    </div>
-</div>
-
 
 <h2 class="mb-4 text-center">Shop by Category</h2>
 <div class="row g-4 mb-5">
@@ -108,6 +97,5 @@
     <p class="text-center">No products available.</p>
     {% endfor %}
 </div>
-
 
 {% endblock %}
