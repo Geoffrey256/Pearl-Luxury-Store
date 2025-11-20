@@ -1,6 +1,6 @@
+from .models import Category, Product, User
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import User
 
 
 class UserAdmin(BaseUserAdmin):
@@ -21,3 +21,18 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug": ("name",)}
+    list_display = ("name", "slug")
+    search_fields = ("name",)
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = ("name", "category", "price", "discount",
+                    "discounted_price", "stock_quantity")
+    list_filter = ("category",)
+    search_fields = ("name", "description")

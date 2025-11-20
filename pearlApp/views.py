@@ -1,3 +1,5 @@
+from django.shortcuts import render, get_object_or_404
+from .models import Category, Product
 from .forms import ProfileUpdateForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, get_user_model, authenticate, logout
@@ -7,15 +9,61 @@ from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
-# Create your views here.
-
 
 def home(request):
     return render(request, "generic/home.html")
 
 
-def landing(request):
-    return render(request, "generic/land.html")
+# ================== Homepage ==================
+
+def landing_view(request):
+    categories = Category.objects.all()
+    products = Product.objects.all().order_by(
+        '-created_at')[:8]  # Latest 8 products for homepage
+    context = {
+        'categories': categories,
+        'products': products,
+    }
+    return render(request, 'generic/landing.html', context)
+
+
+def category_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    context = {
+        "category": category,
+        "products": products,
+    }
+    return render(request, "pearlApp/category_products.html", context)
+
+
+def category_products_view(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
+    context = {
+        "category": category,
+        "products": products,
+    }
+    return render(request, "stores/category_products.html", context)
+
+# # ================== Category Page ==================
+# def category_view(request, slug):
+#     category = get_object_or_404(Category, slug=slug)
+#     products = category.products.all()
+#     context = {
+#         'category': category,
+#         'products': products,
+#     }
+#     return render(request, 'stores/category.html', context)
+
+
+# ================== Product Detail Page ==================
+def product_detail_view(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    context = {
+        'product': product
+    }
+    return render(request, 'stores/product_detail.html', context)
 
 
 User = get_user_model()

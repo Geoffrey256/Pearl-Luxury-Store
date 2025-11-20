@@ -1,9 +1,12 @@
 from django.urls import path
 from . import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 
 urlpatterns = [
     # General URLs
-    path("", views.landing, name="landing"),
+    path("", views.landing_view, name="landing"),
     path("home/", views.home, name="home"),
     path("terms/", views.terms_view, name="terms"),
     path("contact/", views.contact_view, name="contact"),
@@ -28,4 +31,12 @@ urlpatterns = [
     path("store/aquarium/", views.aquarium_view, name="aquarium"),
     path("store/supplements/", views.supplements_view, name="supplements"),
     path("store/electronics/", views.electronics_view, name="electronics"),
+    path("category/<slug:slug>/", views.category_view, name="category"),
+    path("product/<int:pk>/", views.product_detail_view, name="product_detail"),
+    path("category/<slug:slug>/products/",
+         views.category_products_view, name="category_products"),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL,
+                          document_root=settings.MEDIA_ROOT)

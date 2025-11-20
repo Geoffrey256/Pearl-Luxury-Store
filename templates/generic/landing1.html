@@ -1,0 +1,49 @@
+{% extends "main.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Categories</h2>
+<div class="row mb-5">
+    {% for category in categories %}
+    <div class="col-md-3 mb-3">
+        <a href="{% url 'category' category.slug %}" class="text-decoration-none">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <p class="card-text">{{ category.description|truncatewords:10 }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+<h2 class="mb-4">Latest Products</h2>
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-3 mb-4">
+        <div class="card h-100">
+            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+            {% if product.discount %}
+            <span class="badge bg-danger position-absolute top-0 start-0 m-2">{{ product.discount }}% OFF</span>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ product.name }}</h5>
+                <p class="card-text">{{ product.description|truncatewords:12 }}</p>
+                <p class="mb-1">
+                    Price: 
+                    {% if product.discount %}
+                    <span class="text-decoration-line-through">UGX {{ product.price }}</span>
+                    UGX {{ product.discounted_price }}
+                    {% else %}
+                    UGX {{ product.price }}
+                    {% endif %}
+                </p>
+                <p class="text-muted">{{ product.stock_display }}</p>
+                <a href="{% url 'product_detail' product.pk %}" class="btn btn-sm btn-primary w-100">View Product</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

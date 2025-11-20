@@ -16,57 +16,43 @@
 <div class="container mt-5" id="categories">
     <h2 class="mb-4 text-center">Shop by Category</h2>
     <div class="row g-4 text-center">
+        {% for category in categories %}
         <div class="col-md-3">
-            <div class="card h-100 shadow-sm">
-                <img src="{% static 'images/gas.png' %}" class="card-img-top" alt="Gas">
-                <div class="card-body">
-                    <h5 class="card-title">Gas</h5>
-                    <a href="{% url 'gas' %}" class="btn btn-primary">Explore</a>
+            <div class="card h-100 shadow-sm category-card">
+                {% if category.image %}
+                    <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+                {% else %}
+                    <img src="{% static 'images/default_category.png' %}" class="card-img-top" alt="{{ category.name }}">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ category.name }}</h5>
+                    <p class="card-text text-truncate">{{ category.description }}</p>
+                    <a href="{% url 'category_products' category.slug %}" class="btn btn-primary mt-auto">Explore</a>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
-            <div class="card h-100 shadow-sm">
-                <img src="{% static 'images/aquarium.jpg' %}" class="card-img-top" alt="Aquarium">
-                <div class="card-body">
-                    <h5 class="card-title">Aquarium</h5>
-                    <a href="{% url 'aquarium' %}" class="btn btn-primary">Explore</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card h-100 shadow-sm">
-                <img src="{% static 'images/supplements.png' %}" class="card-img-top" alt="Supplements">
-                <div class="card-body">
-                    <h5 class="card-title">Supplements</h5>
-                    <a href="{% url 'supplements' %}" class="btn btn-primary">Explore</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card h-100 shadow-sm">
-                <img src="{% static 'images/electronics.png' %}" class="card-img-top" alt="Electronics">
-                <div class="card-body">
-                    <h5 class="card-title">Electronics</h5>
-                    <a href="{% url 'electronics' %}" class="btn btn-primary">Explore</a>
-                </div>
-            </div>
-        </div>
+        {% empty %}
+        <p class="text-center">No categories available at the moment.</p>
+        {% endfor %}
     </div>
 </div>
+
 
 <!-- Featured Products Section -->
 <div class="container mt-5">
     <h2 class="mb-4 text-center">Featured Products</h2>
     <div class="row g-4">
-        {% comment %} Example product cards {% endcomment %}
         {% for product in featured_products %}
         <div class="col-md-3">
             <div class="card h-100 shadow-sm">
                 <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.name }}</h5>
-                    <p class="card-text">${{ product.price }}</p>
+                    <p class="card-text">UGX {{ product.price|floatformat:0 }}</p>
+                    {% if product.discount %}
+                        <span class="badge bg-danger">{{ product.discount }}% Off</span>
+                        <p class="mt-1">UGX {{ product.discounted_price|floatformat:0 }}</p>
+                    {% endif %}
                     <a href="{% url 'product_detail' product.id %}" class="btn btn-success w-100">View</a>
                 </div>
             </div>
