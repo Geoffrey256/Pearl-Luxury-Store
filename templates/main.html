@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pearl Luxury Store{% endblock %}</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body class="d-flex flex-column min-vh-100">
+
+    <!-- ================= NAVBAR ================= -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+
+            <!-- Logo -->
+            <a class="navbar-brand fw-bold" href="{% url 'landing' %}">Pearl Luxury Store</a>
+
+            <!-- Toggler -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!-- Navbar links -->
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+
+                    <!-- Extra Categories -->
+                    <li class="nav-item"><a class="nav-link" href="{% url 'gas' %}">Gas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'aquarium' %}">Aquarium</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'supplements' %}">Supplements</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'electronics' %}">Electronics</a></li>
+
+                    <!-- Search -->
+                    <li class="nav-item me-3">
+                        <form class="d-flex" method="get" action="{% url 'landing' %}">
+                            <input class="form-control form-control-sm me-2" type="search" name="q"
+                                   placeholder="Search products..." aria-label="Search">
+                            <button class="btn btn-outline-light btn-sm" type="submit">Search</button>
+                        </form>
+                    </li>
+
+                    <!-- Cart -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'cart' %}active{% endif %}"
+                           href="{% url 'cart' %}">Cart</a>
+                    </li>
+
+                    <!-- Account Dropdown -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle 
+                        {% if request.resolver_match.url_name in 'profile wishlist orders' %}active{% endif %}"
+                        href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                            Account
+                        </a>
+
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                            {% if user.is_authenticated %}
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">My Profile</a></li>
+                                <li><a class="dropdown-item" href="{% url 'wishlist' %}">Wishlist</a></li>
+                                <li><a class="dropdown-item" href="{% url 'orders' %}">Orders</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">Log Out</a></li>
+                            {% else %}
+                                <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
+                                <li><a class="dropdown-item" href="{% url 'signup' %}">Sign Up</a></li>
+                            {% endif %}
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ================= PAGE CONTENT ================= -->
+    <main class="flex-grow-1">
+        <div class="container mt-4">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="custom-footer mt-auto py-5 bg-dark text-light">
+        <div class="container">
+            <div class="row gy-4">
+
+                <!-- About Section -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold mb-3 text-uppercase">About Us</h5>
+                    <p class="small">
+                        Pearl Online Store provides premium products with excellent customer experience.
+                    </p>
+                    <a href="{% url 'about' %}" class="btn btn-sm btn-outline-light mt-2">Learn More</a>
+                </div>
+
+                <!-- Help Section -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold mb-3 text-uppercase">Get Help</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="{% url 'contact' %}" class="text-light text-decoration-none">Contact Us</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-light text-decoration-none">Feedback</a></li>
+                        <li><a href="{% url 'contact' %}" class="text-light text-decoration-none">Quick Help</a></li>
+                        <li><a href="{% url 'faqs' %}" class="text-light text-decoration-none">FAQs</a></li>
+                        <li><a href="{% url 'terms' %}" class="text-light text-decoration-none">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social Media -->
+                <div class="col-md-4">
+                    <h5 class="fw-bold mb-3 text-uppercase">Follow Us</h5>
+                    <div class="d-flex flex-wrap gap-3 fs-4">
+                        <a href="#" class="text-light"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-telegram"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-youtube"></i></a>
+                        <a href="#" class="text-light"><i class="bi bi-whatsapp"></i></a>
+                    </div>
+                </div>
+
+            </div>
+
+            <hr class="border-light my-4">
+
+            <div class="text-center small">
+                <p class="mb-0">&copy; 2025 Pearl Online Store. All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    {% block extra_js %}{% endblock %}
+
+</body>
+</html>

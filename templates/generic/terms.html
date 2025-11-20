@@ -1,1 +1,88 @@
-<h2>Terms and conditions</h2>
+{% extends "base.html" %}
+{% block title %}Terms & Conditions{% endblock %}
+
+{% block content %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center">
+  <div class="col-12 col-sm-10 col-md-8 col-lg-7">
+
+    <div class="card shadow-lg p-4">
+      <h2 class="text-center mb-4">Terms & Conditions</h2>
+
+      <p><strong>Last Updated:</strong> {{ today }}</p>
+
+      <h5 class="mt-4">1. Acceptance of Terms</h5>
+      <p>
+        By accessing or using Pearl Online Store, you agree to be bound by these Terms and Conditions.
+        If you do not agree, please discontinue using our services.
+      </p>
+
+      <h5 class="mt-4">2. User Accounts</h5>
+      <p>
+        When creating an account, you agree to provide accurate and complete information.
+        You are responsible for maintaining the confidentiality of your login details and for all activities under your account.
+      </p>
+
+      <h5 class="mt-4">3. User Responsibilities</h5>
+      <p>
+        You agree not to use our services for unlawful activities, not to attempt unauthorized access
+        to our system, and not to provide misleading or false information.
+      </p>
+
+      <h5 class="mt-4">4. Purchases and Payments</h5>
+      <p>
+        All prices are subject to change. By placing an order, you confirm that the payment information 
+        you provide is valid. We may cancel or refuse orders for reasons including stock limits or suspicious activity.
+      </p>
+
+      <h5 class="mt-4">5. Shipping and Delivery</h5>
+      <p>
+        Delivery timelines are estimates and may vary. We are not responsible for delays caused by external factors.
+        Ensure you provide accurate delivery details.
+      </p>
+
+      <h5 class="mt-4">6. Returns and Refunds</h5>
+      <p>
+        Items may be returned within the period stated in our policies. Returned items must be unused, undamaged, 
+        and in original packaging. Some items may be excluded for hygiene or custom reasons.
+      </p>
+
+      <h5 class="mt-4">7. Privacy</h5>
+      <p>
+        We collect and process your data as described in our Privacy Policy. By using our platform, 
+        you consent to our data practices.
+      </p>
+
+      <h5 class="mt-4">8. Intellectual Property</h5>
+      <p>
+        All content on Pearl Online Store—including text, images, logos, and layout—is owned by us or our licensors.
+        You may not copy or distribute our content without permission.
+      </p>
+
+      <h5 class="mt-4">9. Limitation of Liability</h5>
+      <p>
+        We are not liable for damages arising from your use or inability to use the platform, including loss of data, 
+        profits, or interruptions beyond our control.
+      </p>
+
+      <h5 class="mt-4">10. Termination</h5>
+      <p>
+        We may suspend or terminate your account if you violate these Terms, engage in fraudulent activity, 
+        or if required by law.
+      </p>
+
+      <h5 class="mt-4">11. Changes to Terms</h5>
+      <p>
+        These Terms may be updated at any time. Continued use of our services after updates means you accept the changes.
+      </p>
+
+      <h5 class="mt-4">12. Contact Us</h5>
+      <p>
+        For questions or concerns: Contact us on our 
+        <strong><a href="{% url 'landing' %}">Contact Us</a></strong>
+        
+      </p>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

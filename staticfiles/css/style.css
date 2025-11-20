@@ -1,0 +1,23 @@
+/* Navbar colors */
+.custom-navbar {
+    background-color: #343a40; /* Dark gray, same as footer */
+}
+
+.custom-navbar .nav-link,
+.custom-navbar .navbar-brand {
+    color: #ffffff !important; /* White text */
+}
+
+.custom-navbar .nav-link.active,
+.custom-navbar .nav-link:hover {
+    color: #28a745 !important; /* Green hover/active */
+}
+
+/* Footer */
+.custom-footer {
+    background-color: #343a40; /* Dark gray */
+}
+
+.custom-footer a:hover {
+    color: #28a745 !important;
+}

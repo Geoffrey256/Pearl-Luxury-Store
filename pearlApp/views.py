@@ -11,7 +11,7 @@ from django.shortcuts import render, redirect
 
 
 def home(request):
-    return render(request, "home.html")
+    return render(request, "generic/home.html")
 
 
 def landing(request):
@@ -123,3 +123,32 @@ def terms_view(request):
 
 def reset_password_view(request):
     return render(request, "auth/reset_password.html")
+
+
+def contact_view(request):
+    return render(request, "generic/contact.html")
+
+
+def faqs_view(request):
+    return render(request, "generic/faqs.html")
+
+
+def about_view(request):
+    return render(request, "generic/about.html")
+
+
+# store views
+def gas_view(request):
+    return render(request, "stores/gas.html")
+
+
+def aquarium_view(request):
+    return render(request, "stores/aquarium.html")
+
+
+def supplements_view(request):
+    return render(request, "stores/supplements.html")
+
+
+def electronics_view(request):
+    return render(request, "stores/electronicts.html")
