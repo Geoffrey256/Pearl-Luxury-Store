@@ -90,3 +90,18 @@ class Product(models.Model):
         """Display stock with appropriate unit"""
         unit = "pieces"  # You can later customize per category if needed
         return f"{self.stock_quantity} {unit} remaining"
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    def subtotal(self):
+        if self.product.discount:
+            return self.quantity * self.product.discounted_price
+        return self.quantity * self.product.price
+
+    def __str__(self):
+        return f"{self.product.name} ({self.quantity})"

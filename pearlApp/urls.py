@@ -25,6 +25,20 @@ urlpatterns = [
     path("orders/", views.orders_view, name="orders"),
     path("wishlist/", views.wishlist_view, name="wishlist"),
     path("cart/", views.cart_view, name="cart"),
+    #     path("add-to-cart/<int:product_id>/",
+    #          views.add_to_cart, name="add_to_cart"),
+    #     path("cart/add/<int:pk>/", views.add_to_cart, name="add_to_cart"),
+    path("cart/update/<int:pk>/", views.update_cart, name="update_cart"),
+    path("cart/remove/<int:pk>/", views.remove_from_cart, name="remove_from_cart"),
+    path("cart/add/<int:product_id>/", views.add_to_cart, name="add_to_cart"),
+
+
+    #     path("add-to-wishlist/<int:product_id>/",
+    #          views.add_to_wishlist, name="add_to_wishlist"),
+    path("add-to-wishlist/<int:product_id>/",
+         views.add_to_wishlist, name="add_to_wishlist"),
+
+
 
     # Store URLs
     path("store/gas/", views.gas_view, name="gas"),

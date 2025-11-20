@@ -4,25 +4,66 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm position-relative">
+
+            <!-- Product Image -->
             <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+
+            <!-- Discount Badge -->
             {% if product.discount %}
-            <span class="badge bg-danger position-absolute top-0 start-0 m-2">{{ product.discount }}% OFF</span>
+            <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                {{ product.discount }}% OFF
+            </span>
             {% endif %}
+
             <div class="card-body">
+
+                <!-- Product Title -->
                 <h3 class="card-title">{{ product.name }}</h3>
+
+                <!-- Full Description -->
                 <p class="card-text">{{ product.description }}</p>
+
+                <!-- Price -->
                 <p>
                     Price: 
                     {% if product.discount %}
-                    <span class="text-decoration-line-through">UGX {{ product.price }}</span>
-                    UGX {{ product.discounted_price }}
+                        <span class="text-decoration-line-through text-danger">
+                            UGX {{ product.price }}
+                        </span>
+                        <span class="fw-bold ms-2">
+                            UGX {{ product.discounted_price }}
+                        </span>
                     {% else %}
-                    UGX {{ product.price }}
+                        <span class="fw-bold">
+                            UGX {{ product.price }}
+                        </span>
                     {% endif %}
                 </p>
+
+                <!-- Stock -->
                 <p class="text-muted">{{ product.stock_display }}</p>
-                <button class="btn btn-success w-100">Add to Cart</button>
+
+                <!-- ACTION BUTTONS -->
+                <div class="d-grid gap-2">
+
+                    <!-- Add to Cart -->
+                    <a href="{% url 'add_to_cart' product.id %}" class="btn btn-success">
+                        Add to Cart
+                    </a>
+
+                    <!-- Add to Wishlist -->
+                    <a href="{% url 'add_to_wishlist' product.id %}" class="btn btn-outline-danger">
+                        Add to Wishlist ❤️
+                    </a>
+
+                    <!-- Continue Shopping -->
+                    <a href="{% url 'orders' %}" class="btn btn-primary">
+                        Continue Shopping
+                    </a>
+
+                </div>
+
             </div>
         </div>
     </div>

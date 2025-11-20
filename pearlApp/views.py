@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Category, Product
+from .models import Category, Product, Cart
 from .forms import ProfileUpdateForm
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth import login, get_user_model, authenticate, logout
@@ -10,11 +10,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 
+# ================== Home Page ==================
 def home(request):
     return render(request, "generic/home.html")
 
-
-# ================== Homepage ==================
 
 def landing_view(request):
     categories = Category.objects.all()
@@ -66,6 +65,7 @@ def product_detail_view(request, pk):
     return render(request, 'stores/product_detail.html', context)
 
 
+# AUTHENTICATION VIEWS
 User = get_user_model()
 
 
@@ -117,9 +117,6 @@ def logout_view(request):
     return redirect("login")  # Redirect to login page after logout
 
 
-# pearlApp/views.py
-
-
 @login_required
 def profile_view(request):
     user = request.user
@@ -141,36 +138,17 @@ def profile_view(request):
 
     return render(request, "auth/profile.html", {"form": form})
 
-# @login_required
-# def profile_view(request):
-#     if request.method == "POST":
-#         form = UserChangeForm(request.POST, instance=request.user)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("/profile/")
-#     else:
-#         form = UserChangeForm(instance=request.user)
-#     return render(request, "profile.html", {"form": form})
+
+def reset_password_view(request):
+    return render(request, "auth/reset_password.html")
 
 
 def orders_view(request):
     return render(request, "stores/orders.html")
 
 
-def wishlist_view(request):
-    return render(request, "stores/wishlist.html")
-
-
-def cart_view(request):
-    return render(request, "stores/cart.html")
-
-
 def terms_view(request):
     return render(request, "generic/terms.html")
-
-
-def reset_password_view(request):
-    return render(request, "auth/reset_password.html")
 
 
 def contact_view(request):
@@ -200,3 +178,143 @@ def supplements_view(request):
 
 def electronics_view(request):
     return render(request, "stores/electronicts.html")
+
+
+# def add_to_cart(request, product_id):
+#     product = get_object_or_404(Product, id=product_id)
+
+#     # Example: add item to session cart
+#     cart = request.session.get("cart", {})
+
+#     cart[str(product_id)] = cart.get(str(product_id), 0) + 1
+
+#     request.session["cart"] = cart
+
+#     return render(request, "store/added_to_cart.html", {"product": product})
+
+# def add_to_cart(request, pk):
+#     product = get_object_or_404(Product, pk=pk)
+
+#     # Check if this product is already in the user's cart
+#     cart_item, created = Cart.objects.get_or_create(
+#         user=request.user, product=product
+#     )
+
+#     if not created:
+#         cart_item.quantity += 1
+#         cart_item.save()
+
+#     messages.success(request, f"{product.name} added to cart!")
+#     return redirect("cart")
+
+# @login_required
+# def add_to_cart(request, product_id):
+#     product = get_object_or_404(Product, pk=product_id)
+
+#     cart_item, created = Cart.objects.get_or_create(
+#         user=request.user,
+#         product=product
+#     )
+
+#     if not created:
+#         cart_item.quantity += 1
+#         cart_item.save()
+
+#     messages.success(request, f"{product.name} added to cart!")
+#     return redirect('cart_view')
+
+@login_required
+def add_to_cart(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+
+    cart, created = Cart.objects.get_or_create(user=request.user)
+
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart,
+        product=product
+    )
+
+    if not created:
+        cart_item.quantity += 1
+        cart_item.save()
+
+    return redirect("view_cart")
+
+
+@login_required
+def cart_view(request):
+    cart_items = Cart.objects.filter(user=request.user)
+
+    total = sum(item.subtotal() for item in cart_items)
+
+    return render(request, "stores/cart.html", {
+        "cart_items": cart_items,
+        "total": total
+    })
+
+
+# def cart_view(request):
+#     cart = request.session.get("cart", {})
+#     products = Product.objects.filter(id__in=cart.keys())
+
+#     cart_items = []
+
+#     for p in products:
+#         cart_items.append({
+#             "product": p,
+#             "quantity": cart[str(p.id)],
+#             "total": p.discounted_price * cart[str(p.id)]
+#         })
+
+#     return render(request, "store/cart.html", {"cart_items": cart_items})
+
+@login_required
+def update_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+
+    new_qty = int(request.POST.get('quantity', 1))
+    if new_qty > 0:
+        cart_item.quantity = new_qty
+        cart_item.save()
+
+    messages.success(request, "Cart updated successfully!")
+    return redirect('cart_view')
+
+
+@login_required
+def remove_from_cart(request, cart_id):
+    cart_item = get_object_or_404(Cart, id=cart_id, user=request.user)
+    cart_item.delete()
+
+    messages.info(request, "Item removed from your cart.")
+    return redirect('cart_view')
+
+
+# def add_to_wishlist(request, product_id):
+#     wishlist = request.session.get("wishlist", [])
+
+#     if product_id not in wishlist:
+#         wishlist.append(product_id)
+
+#     request.session["wishlist"] = wishlist
+
+#     return redirect("wishlist")
+
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, pk=product_id)
+
+    Wishlist.objects.get_or_create(
+        user=request.user,
+        product=product
+    )
+
+    return redirect("wishlist")
+
+
+def wishlist_view(request):
+    ids = request.session.get("wishlist", [])
+    products = Product.objects.filter(id__in=ids)
+
+    return render(request, "store/wishlist.html", {"products": products})
