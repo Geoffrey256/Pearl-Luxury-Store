@@ -1,0 +1,31 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: pearl_db
+      POSTGRES_USER: pearl_user
+      POSTGRES_PASSWORD: pearl_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DEBUG=1
+      - DJANGO_DB_HOST=db
+      - DJANGO_DB_NAME=pearl_db
+      - DJANGO_DB_USER=pearl_user
+      - DJANGO_DB_PASSWORD=pearl_pass
+
+volumes:
+  postgres_data:
