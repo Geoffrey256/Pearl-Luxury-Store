@@ -12,6 +12,7 @@ urlpatterns = [
     path("contact/", views.contact_view, name="contact"),
     path("faqs/", views.faqs_view, name="faqs"),
     path("about/", views.about_view, name="about"),
+    path('search/', views.search, name='search'),
 
     # Authentication URLs
     path("signup/", views.signup_view, name="signup"),
@@ -32,11 +33,10 @@ urlpatterns = [
     path("cart/remove/<int:pk>/", views.remove_from_cart, name="remove_from_cart"),
     path("cart/add/<int:product_id>/", views.add_to_cart, name="add_to_cart"),
 
-
-    #     path("add-to-wishlist/<int:product_id>/",
-    #          views.add_to_wishlist, name="add_to_wishlist"),
-    path("add-to-wishlist/<int:product_id>/",
-         views.add_to_wishlist, name="add_to_wishlist"),
+    path('wishlist/add/<int:product_id>/',
+         views.add_to_wishlist, name='add_to_wishlist'),
+    path('wishlist/remove/<int:product_id>/',
+         views.remove_from_wishlist, name='remove_from_wishlist'),
 
 
 

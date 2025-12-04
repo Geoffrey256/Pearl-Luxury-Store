@@ -1,5 +1,5 @@
 from .models import Cart
-from .models import Category, Product, User
+from .models import Category, Product, User, Wishlist
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
@@ -47,3 +47,9 @@ class CartAdmin(admin.ModelAdmin):
     def subtotal_display(self, obj):
         return obj.subtotal()
     subtotal_display.short_description = "Subtotal (UGX)"
+
+
+# @admin.register(Wishlist)
+# class WishlistAdmin(admin.ModelAdmin):
+#     list_display = ("user", "product")
+#     list_filter = ("user",)
