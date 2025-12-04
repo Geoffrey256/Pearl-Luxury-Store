@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title %}Pearl Luxury Store{% endblock %}</title>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"/>
+
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- main css -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="loaded">
+
+    <!-- top banner -->
+    <div class="top-banner">
+        <p>🎉 Free shipping on orders over UGX 500000 | Use code: PEARL20 for 20% off</p>
+    </div>
+
+    <!-- header / navbar -->
+    {% include "partials/header.html" %}
+    {# partials/header.html should render the nav and search and use cart_count in context #}
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-slider">
+            <div class="hero-slide active" style="background-image: url('{% static 'images/electronics.png' %}');">
+                <div class="hero-content">
+                    <h1 class="hero-title animate-on-scroll">Premium Electronics</h1>
+                    <p class="hero-subtitle animate-on-scroll">Discover cutting-edge technology</p>
+                    <a href="{% url 'category_products' 'electronics' %}" class="btn btn-primary btn-rounded animate-on-scroll">
+                        Shop Electronics
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-slide" style="background-image: url('{% static 'images/hero_aquarium.jpg' %}');">
+                <div class="hero-content">
+                    <h1 class="hero-title">Aquarium Paradise</h1>
+                    <p class="hero-subtitle">Everything for your aquatic world</p>
+                    <a href="{% url 'category_products' 'aquarium' %}" class="btn btn-primary btn-rounded">Shop Aquarium</a>
+                </div>
+            </div>
+
+            <div class="hero-slide" style="background-image: url('{% static 'images/hero_supplements.jpg' %}');">
+                <div class="hero-content">
+                    <h1 class="hero-title">Health Supplements</h1>
+                    <p class="hero-subtitle">Premium nutrition for better living</p>
+                    <a href="{% url 'category_products' 'supplements' %}" class="btn btn-primary btn-rounded">Shop Supplements</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-indicators">
+            <button class="indicator active" onclick="goToSlide(0)"></button>
+            <button class="indicator" onclick="goToSlide(1)"></button>
+            <button class="indicator" onclick="goToSlide(2)"></button>
+        </div>
+    </section>
+
+    <!-- CATEGORIES -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title text-center">Shop by Category</h2>
+            <div class="row g-4 mt-4">
+                {% for category in categories %}
+                <div class="col-6 col-md-3">
+                    <a href="{% url 'category_products' category.slug %}" class="text-decoration-none">
+                        <div class="card category-card h-100 animate-on-scroll">
+                            {% if category.image %}
+                                <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+                            {% else %}
+                                <!-- fallback to uploaded sample image path -->
+                                <img src="/mnt/data/eab7ed32-e206-4791-8ac4-c5b9292ec4b3.png" class="card-img-top" alt="{{ category.name }}">
+                            {% endif %}
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">{{ category.name }}</h5>
+                                <p class="card-text text-truncate">{{ category.description|truncatewords:12 }}</p>
+                                <div class="mt-auto">
+                                    <span class="btn btn-primary w-100">Explore</span>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% empty %}
+                    <p class="text-center">No categories yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS -->
+    <section class="section bg-gray-50">
+        <div class="container">
+            <h2 class="section-title text-center">Featured Products</h2>
+            <div class="row g-4 mt-4">
+                {% for product in featured_products %}
+                <div class="col-6 col-md-3">
+                    <div class="card product-card h-100 position-relative animate-on-scroll">
+                        {% if product.discount %}
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">{{ product.discount }}% OFF</span>
+                        {% endif %}
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="/mnt/data/eab7ed32-e206-4791-8ac4-c5b9292ec4b3.png" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text text-truncate">{{ product.description|truncatewords:10 }}</p>
+
+                            <div class="mt-auto">
+                                <p class="mb-2">
+                                    {% if product.discount %}
+                                        <span class="text-decoration-line-through text-danger">UGX {{ product.price }}</span>
+                                        <span class="fw-bold ms-2">UGX {{ product.discounted_price }}</span>
+                                    {% else %}
+                                        <span class="fw-bold">UGX {{ product.price }}</span>
+                                    {% endif %}
+                                </p>
+
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'product_detail' product.pk %}" class="btn btn-sm btn-primary w-100">View</a>
+
+                                    <form action="{% url 'add_to_cart' product.id %}" method="post" class="w-100">
+                                        {% csrf_token %}
+                                        <button class="btn btn-sm btn-success w-100">Add to Cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- LATEST PRODUCTS (small grid) -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title text-center">Latest Products</h2>
+            <div class="row g-4 mt-3">
+                {% for product in products %}
+                <div class="col-6 col-md-3">
+                    <div class="card product-card h-100 animate-on-scroll">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        {% else %}
+                            <img src="/mnt/data/eab7ed32-e206-4791-8ac4-c5b9292ec4b3.png" class="card-img-top" alt="{{ product.name }}">
+                        {% endif %}
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title">{{ product.name }}</h6>
+                            <p class="card-text text-truncate">{{ product.description|truncatewords:8 }}</p>
+                            <div class="mt-auto">
+                                <span class="fw-bold">UGX {{ product.discounted_price }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- footer via partial -->
+    {% include "partials/footer.html" %}
+
+    <!-- scripts -->
+    <script src="{% static 'js/scripts.js' %}"></script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>
+    AOS.init();
+</script>
+
+</body>
+</html>

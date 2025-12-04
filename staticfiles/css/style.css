@@ -1,3 +1,55 @@
+/* --- Uniform Card Image Styles --- */
+.card-img-top {
+    width: 100%;
+    height: 10px !important;       /* Resize all images to same height */
+    object-fit: cover !important;   /* Ensures images crop nicely */
+    object-position: center;
+    border-radius: 5px 5px 0 0;
+}
+
+/* --- Category & Product Cards --- */
+.card {
+    height: 1000px !important;   /* Total card height ≈ 5 cm on laptop screens */
+    max-height: 1000px !important;
+    width: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.card-body {
+    padding: 10px;
+}
+
+/* Text truncation to keep cards small */
+.card-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.card-text {
+    font-size: 0.80rem;
+}
+
+/* Buttons inside cards */
+.card .btn {
+    font-size: 0.75rem !important;
+    padding: 4px 6px !important;
+}
+
+/* --- Grid Spacing --- */
+.row.g-4 > div {
+    margin-bottom: 15px;
+}
+
+/* --- Hover Animation --- */
+.category-card:hover, 
+.card:hover {
+    transform: scale(1.03);
+    transition: 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+
 /* Navbar colors */
 .custom-navbar {
     background-color: #343a40; /* Dark gray, same as footer */

@@ -1,0 +1,46 @@
+{% extends "main.html" %}
+{% block title %}My Wishlist{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">My Wishlist</h2>
+
+    {% if wishlist_items %}
+    <div class="row g-4">
+        {% for item in wishlist_items %}
+        <div class="col-md-3 col-sm-6">
+            <div class="card h-100 shadow-sm position-relative">
+
+                {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" class="card-img-top" alt="{{ item.product.name }}">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center bg-secondary text-light"
+                         style="height:180px;">
+                        {{ item.product.name }}
+                    </div>
+                {% endif %}
+
+                <div class="card-body">
+                    <h5 class="card-title">{{ item.product.name }}</h5>
+                    <p class="card-text text-truncate">{{ item.product.description|truncatewords:12 }}</p>
+                    <p class="fw-bold">UGX {{ item.product.price }}</p>
+
+                    <a href="{% url 'product_detail' item.product.pk %}" 
+                       class="btn btn-sm btn-primary w-100 mb-2">View Product</a>
+
+                    <form action="{% url 'remove_from_wishlist' item.product.id %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-sm btn-danger w-100">Remove from Wishlist</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="text-center mt-4">Your wishlist is empty.</p>
+    {% endif %}
+</div>
+ <br>
+{% endblock %}
