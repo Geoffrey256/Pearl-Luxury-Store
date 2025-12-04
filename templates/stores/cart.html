@@ -1,62 +1,67 @@
 {% extends "main.html" %}
+{% load static %}
 {% block title %}My Cart{% endblock %}
 
 {% block content %}
-<h2 class="mb-4">My Cart</h2>
+<div class="container mt-5">
+    <h2 class="mb-4">My Cart</h2>
 
-{% if cart_items %}
-<table class="table table-bordered">
-    <thead class="table-light">
-        <tr>
-            <th>Product</th>
-            <th>Price (UGX)</th>
-            <th>Quantity</th>
-            <th>Subtotal (UGX)</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in cart_items %}
-        <tr>
-            <td>{{ item.product.name }}</td>
-
-            <td>{{ item.product.discounted_price }}</td>
-
-            <td style="width: 150px;">
-                <form action="{% url 'update_cart' item.pk %}" method="POST">
-                    {% csrf_token %}
-                    <input type="number" name="quantity" min="1"
-                           value="{{ item.quantity }}" class="form-control form-control-sm">
-                    <button class="btn btn-primary btn-sm mt-1 w-100">Update</button>
-                </form>
-            </td>
-
-            <td>{{ item.subtotal }}</td>
-
-            <td>
-                <a href="{% url 'remove_from_cart' item.pk %}" 
-                   class="btn btn-danger btn-sm">Remove</a>
-            </td>
-        </tr>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-success">{{ message }}</div>
         {% endfor %}
-    </tbody>
-</table>
+    {% endif %}
 
-<h4 class="text-end mt-3">Total: <strong>UGX {{ total }}</strong></h4>
+    {% if cart_items %}
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>
+                    {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" width="50" class="me-2" alt="{{ item.product.name }}">
+                    {% endif %}
+                    {{ item.product.name }}
+                </td>
+                <td>UGX {{ item.product.discounted_price }}</td>
+                <td>
+                    <form action="{% url 'update_cart' item.id %}" method="POST" class="d-flex">
+                        {% csrf_token %}
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="form-control form-control-sm me-2" style="width:70px;">
+                        <button class="btn btn-sm btn-primary">Update</button>
+                    </form>
+                </td>
+                <td>UGX {{ item.subtotal }}</td>
+                <td>
+                    <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">Remove</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th colspan="3" class="text-end">Total:</th>
+                <th>UGX {{ total }}</th>
+                <th></th>
+            </tr>
+        </tfoot>
+    </table>
 
-<div class="d-flex justify-content-between mt-4">
-    <a href="{% url 'store' %}" class="btn btn-outline-primary">
-        Continue Shopping
-    </a>
+    <a href="#" class="btn btn-success">Proceed to Checkout</a>
 
-    <a href="{% url 'order' %}" class="btn btn-success">
-        Proceed to Order
-    </a>
+    {% else %}
+    <p>Your cart is empty.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+    {% endif %}
 </div>
-
-{% else %}
-<p>Your cart is empty.</p>
-<a href="{% url 'landing' %}" class="btn btn-primary">Start Shopping</a>
-
-{% endif %}
+<br>
 {% endblock %}
