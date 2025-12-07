@@ -1,3 +1,6 @@
+from .models import Product, Category, Cart
+from django.db.models import Sum
+from django.core.paginator import Paginator
 from .models import Product, Wishlist
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db.models import Q
@@ -53,16 +56,6 @@ def category_products_view(request, slug):
         "products": products,
     }
     return render(request, "stores/category_products.html", context)
-
-# # ================== Category Page ==================
-# def category_view(request, slug):
-#     category = get_object_or_404(Category, slug=slug)
-#     products = category.products.all()
-#     context = {
-#         'category': category,
-#         'products': products,
-#     }
-#     return render(request, 'stores/category.html', context)
 
 
 # ================== Product Detail Page ==================
@@ -172,9 +165,6 @@ def about_view(request):
     return render(request, "generic/about.html")
 
 
-# views.py
-
-
 def search(request):
     query = request.GET.get('q', '')
     products = Product.objects.filter(
@@ -183,21 +173,42 @@ def search(request):
     return render(request, "generic/search_results.html", {"products": products, "query": query})
 
 
-# store views
-def gas_view(request):
-    return render(request, "stores/gas.html")
+# def category_page(request, slug, page_title, template_name="category_products.html"):
+#     category = get_object_or_404(Category, slug=slug)
+#     products = Product.objects.filter(category=category)
+
+#     return render(request, template_name, {
+#         "category": category,
+#         "products": products,
+#         "page_title": page_title,
+#     })
 
 
-def aquarium_view(request):
-    return render(request, "stores/aquarium.html")
+def category_page(request, slug, page_title, template_name="stores/category_products.html"):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category)
 
-
-def supplements_view(request):
-    return render(request, "stores/supplements.html")
+    return render(request, template_name, {
+        "category": category,
+        "products": products,
+        "page_title": page_title,
+    })
 
 
 def electronics_view(request):
-    return render(request, "stores/electronicts.html")
+    return category_page(request, "electronics", "Electronics", template_name="stores/category_products.html")
+
+
+def gas_view(request):
+    return category_page(request, "gas-products", "Gas Products", template_name="stores/category_products.html")
+
+
+def supplements_view(request):
+    return category_page(request, "supplements", "Supplements", template_name="stores/category_products.html")
+
+
+def aquarium_view(request):
+    return category_page(request, "aquarium-products", "Aquariums", template_name="stores/category_products.html")
 
 
 #   wishlist views
