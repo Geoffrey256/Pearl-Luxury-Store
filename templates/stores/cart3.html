@@ -1,0 +1,66 @@
+{% for item in cart_items %}
+<tr>
+    <td>
+        {% if item.product.image %}
+            <img src="{{ item.product.image.url }}" width="50" class="me-2" alt="{{ item.product.name }}">
+        {% endif %}
+        {{ item.product.name }}
+    </td>
+    <td>UGX {{ item.product.discounted_price }}</td>
+    <td>
+        <form action="{% url 'update_cart' item.id %}" method="POST" class="d-flex update-form">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.stock_quantity }}" class="form-control form-control-sm me-2" style="width:70px;">
+            <button type="button" class="btn btn-sm btn-primary confirm-update-btn">Update</button>
+        </form>
+        <small class="text-muted">Stock: {{ item.product.stock_quantity }}</small>
+    </td>
+    <td>UGX {{ item.subtotal }}</td>
+    <td>
+        <a href="{% url 'remove_from_cart' item.id %}" class="btn btn-sm btn-danger">Remove</a>
+    </td>
+</tr>
+{% endfor %}
+
+
+<!-- Confirmation Modal -->
+<div class="modal fade" id="confirmUpdateModal" tabindex="-1" aria-labelledby="confirmUpdateLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmUpdateLabel">Confirm Update</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to update the quantity for this item?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="modalConfirmBtn">Yes, Update</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% block extra_js %}
+<script>
+    let formToSubmit = null;
+
+    // Show modal when "Update" button clicked
+    document.querySelectorAll('.confirm-update-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            formToSubmit = this.closest('.update-form');
+            const modal = new bootstrap.Modal(document.getElementById('confirmUpdateModal'));
+            modal.show();
+        });
+    });
+
+    // When modal confirm button clicked, submit the form
+    document.getElementById('modalConfirmBtn').addEventListener('click', function() {
+        if(formToSubmit){
+            formToSubmit.submit();
+        }
+    });
+</script>
+{% endblock %}

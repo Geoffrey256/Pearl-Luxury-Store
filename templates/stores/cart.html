@@ -56,11 +56,11 @@
         </tfoot>
     </table>
 
-    <a href="#" class="btn btn-success">Proceed to Checkout</a>
+    <a href="{% url 'orders' %}" class="btn btn-success">Proceed to Checkout</a>
 
     {% else %}
     <p>Your cart is empty.</p>
-    <a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+    <a href="{% url 'landing' %}" class="btn btn-primary">Continue Shopping</a>
     {% endif %}
 </div>
 <br>

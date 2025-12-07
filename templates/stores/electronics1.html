@@ -1,0 +1,226 @@
+{% extends "main.html" %}
+{% load static %}
+{% block title %}Electronics - Pearl Luxury Store{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/electronics.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- ===================== HERO / PAGE HEADER ===================== -->
+<section class="section bg-gray-100 py-4">
+    <div class="container">
+        <h1 class="fw-bold">Electronics</h1>
+        <p class="text-muted">Discover cutting-edge gadgets, premium audio, smart displays & more.</p>
+
+        <!-- Search & Filters -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3 mt-3">
+
+            <!-- Search -->
+            <form method="GET" action="{% url 'search' %}" class="w-100 w-md-50">
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        class="form-control" 
+                        placeholder="Search electronics..." 
+                        value="{{ request.GET.q|default:'' }}"
+                    >
+                    <button class="btn btn-primary" type="submit">Search</button>
+                </div>
+            </form>
+
+            <!-- Filters -->
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-outline-secondary filter-btn active" data-filter="all">All Electronics</button>
+                <button class="btn btn-outline-secondary filter-btn" data-filter="tv">TVs & Displays</button>
+                <button class="btn btn-outline-secondary filter-btn" data-filter="laptop">Laptops</button>
+                <button class="btn btn-outline-secondary filter-btn" data-filter="gaming">Gaming</button>
+                <button class="btn btn-outline-secondary filter-btn" data-filter="audio">Audio</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- ===================== BEST SELLERS ===================== -->
+<section class="section py-5 bg-white">
+    <div class="container">
+        <h2 class="fw-bold mb-4">🔥 Best Sellers</h2>
+
+        {% if best_selling_products %}
+        <div class="row g-4">
+            {% for product in best_selling_products %}
+            <div class="col-6 col-md-3">
+                <div class="card best-seller-card shadow-sm h-100 border-0">
+
+                    <div class="position-relative">
+                        <img 
+                            src="{{ product.image.url }}" 
+                            class="card-img-top"
+                            style="height: 180px; object-fit: cover; border-radius: 8px 8px 0 0;"
+                            alt="{{ product.name }}"
+                        >
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-2 px-3 py-1">
+                            Best Seller
+                        </span>
+                    </div>
+
+                    <div class="card-body">
+                        <h6 class="fw-bold">{{ product.name|truncatechars:40 }}</h6>
+
+                        <p class="text-muted small mb-2">
+                            {% if product.discount %}
+                                <span class="text-danger text-decoration-line-through">UGX {{ product.price }}</span>
+                                <span class="fw-bold ms-2">UGX {{ product.discounted_price }}</span>
+                            {% else %}
+                                <span class="fw-bold">UGX {{ product.price }}</span>
+                            {% endif %}
+                        </p>
+
+                        <a href="{% url 'product_detail' product.id %}" class="btn btn-primary btn-sm w-100">
+                            View Item
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No best sellers yet.</p>
+        {% endif %}
+    </div>
+</section>
+
+
+
+<!-- ===================== ALL ELECTRONICS ===================== -->
+<section class="section py-5">
+    <div class="container">
+
+        <h2 class="fw-bold mb-4">All Electronics</h2>
+
+        <div class="row g-4 products-grid">
+
+            {% if products %}
+                {% for product in products %}
+                <div class="col-6 col-md-4 col-lg-3">
+
+                    <div 
+                        class="card product-card shadow-sm h-100 animate-on-scroll"
+                        data-category="{{ product.category.slug }}"
+                    >
+
+                        <!-- Discount Badge -->
+                        {% if product.discount %}
+                        <span class="badge bg-danger position-absolute top-0 start-0 m-2">
+                            {{ product.discount }}% OFF
+                        </span>
+                        {% endif %}
+
+                        <!-- Image -->
+                        <img 
+                            src="{{ product.image.url }}" 
+                            class="card-img-top"
+                            style="height: 180px; object-fit: cover;"
+                        >
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="fw-bold mb-1">{{ product.name }}</h5>
+
+                            <p class="mb-1 small text-muted">
+                                ⭐⭐⭐⭐⭐ ({{ product.reviews_count|default:"0" }})
+                            </p>
+
+                            <p class="mb-2">
+                                {% if product.discount %}
+                                    <span class="text-danger text-decoration-line-through small">UGX {{ product.price }}</span>
+                                    <span class="fw-bold ms-1">UGX {{ product.discounted_price }}</span>
+                                {% else %}
+                                    <span class="fw-bold">UGX {{ product.price }}</span>
+                                {% endif %}
+                            </p>
+
+                            <span class="small text-muted mb-2">{{ product.stock_display }}</span>
+
+                            <div class="mt-auto d-flex gap-2">
+                                <a href="{% url 'product_detail' product.id %}" class="btn btn-sm btn-primary w-100">View</a>
+
+                                <form action="{% url 'add_to_cart' product.id %}" method="POST" class="w-100">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-success w-100">Add</button>
+                                </form>
+
+                                <form action="{% url 'add_to_wishlist' product.id %}" method="POST" class="w-100">
+                                    {% csrf_token %}
+                                    <button class="btn btn-sm btn-outline-danger w-100">♥</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No electronics found.</p>
+            {% endif %}
+
+        </div>
+
+
+
+        <!-- Pagination -->
+        <div class="text-center mt-4">
+            {% if is_paginated %}
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-outline-secondary">Previous</a>
+                {% endif %}
+
+                <span class="mx-2 fw-bold">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn btn-outline-secondary">Next</a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+
+{% endblock %}
+
+
+
+
+{% block extra_js %}
+<script src="{% static 'js/scripts.js' %}"></script>
+
+<script>
+// Filter Buttons
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+
+        // Active state
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        const filter = this.dataset.filter;
+
+        document.querySelectorAll('.product-card').forEach(card => {
+            let category = card.dataset.category;
+
+            if (filter === "all" || filter === category) {
+                card.style.display = "";
+            } else {
+                card.style.display = "none";
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
